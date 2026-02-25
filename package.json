@@ -17,7 +17,7 @@
     "type": "git",
     "url": "git+https://github.com/VladislavPetyukevich/nodejs-ai-image-generator.git"
   },
-  "keywords": [],
+  "keywords": ["ai", "image-generation", "ollama", "flux", "text-to-image", "nodejs", "batch"],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
