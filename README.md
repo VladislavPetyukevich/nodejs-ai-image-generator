@@ -106,4 +106,4 @@ for (const { prompt, results } of batch) {
 
 ## License
 
-ISC
+MIT
