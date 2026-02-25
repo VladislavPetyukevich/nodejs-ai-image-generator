@@ -140,3 +140,6 @@ vite.config.ts.timestamp-*
 
 # Playground generated output
 playground/output/
+
+# MacOS
+.DS_Store
