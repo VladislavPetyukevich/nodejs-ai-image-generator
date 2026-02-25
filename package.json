@@ -1,0 +1,31 @@
+{
+  "name": "nodejs-ai-image-generator",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VladislavPetyukevich/nodejs-ai-image-generator.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/VladislavPetyukevich/nodejs-ai-image-generator/issues"
+  },
+  "homepage": "https://github.com/VladislavPetyukevich/nodejs-ai-image-generator#readme",
+  "devDependencies": {
+    "typescript": "^5",
+    "vitest": "^3"
+  }
+}
