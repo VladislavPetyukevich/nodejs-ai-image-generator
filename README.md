@@ -5,7 +5,7 @@ Generate images using [Ollama](https://ollama.com) image models from Node.js.
 ## Requirements
 
 - [Ollama](https://ollama.com) running locally (default: `http://localhost:11434`)
-- An image-capable model pulled, e.g. `ollama pull x/flux2-klein:4b`
+- An image-capable model pulled, e.g. `ollama pull x/flux2-klein:4b` (Experimental, currently available only on macOS. Follow this repo for feature updates :) )
 
 ## Installation
 
