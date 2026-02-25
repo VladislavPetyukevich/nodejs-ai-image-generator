@@ -77,7 +77,10 @@ describe('generateImage', () => {
     });
 
     const body = JSON.parse(mockFetch.mock.calls[0][1].body);
-    expect(body.options).toEqual({ seed: 42, width: 512, height: 512, steps: 20 });
+    expect(body.seed).toBe(42);
+    expect(body.width).toBe(512);
+    expect(body.height).toBe(512);
+    expect(body.steps).toBe(20);
   });
 
   it('should throw an error when the API response is not ok', async () => {
@@ -195,7 +198,10 @@ describe('batchGenerateImages', () => {
     );
 
     const body = JSON.parse(mockFetch.mock.calls[0][1].body);
-    expect(body.options).toEqual({ seed: 7, width: 256, height: 256, steps: 10 });
+    expect(body.seed).toBe(7);
+    expect(body.width).toBe(256);
+    expect(body.height).toBe(256);
+    expect(body.steps).toBe(10);
   });
 
   it('should make prompts.length * countPerPrompt total fetch calls', async () => {

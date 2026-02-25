@@ -52,7 +52,7 @@ export async function generateImage(config: GenerateImageConfig): Promise<Genera
       model,
       prompt: config.prompt,
       stream: false,
-      options: config.options,
+      ...config.options,
     }),
   });
 
