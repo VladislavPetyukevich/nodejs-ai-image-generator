@@ -45,7 +45,7 @@ import fs from 'fs';
 fs.writeFileSync('output.png', Buffer.from(result.imageBase64, 'base64'));
 ```
 
-## Config
+## generateImage config
 
 | Field | Type | Default | Description |
 |---|---|---|---|
@@ -57,6 +57,52 @@ fs.writeFileSync('output.png', Buffer.from(result.imageBase64, 'base64'));
 | `options.height` | `number` | — | Output height in px |
 | `options.steps` | `number` | — | Diffusion steps |
 | `options.negative_prompt` | `string` | — | Things to avoid |
+
+
+## Batch generation
+
+Use `batchGenerateImages` to generate images for multiple prompts. Images are generated one by one in sequence.
+
+```ts
+import { batchGenerateImages } from 'nodejs-ai-image-generator';
+
+const batch = await batchGenerateImages({
+  prompts: [
+    'a sunset over mountains',
+    'a futuristic city at night',
+  ],
+  countPerPrompt: 3, // generate 3 images per prompt (default: 1)
+  onProgress: (completed, total) => {
+    console.log(`Progress: ${completed}/${total} images generated`);
+  },
+  // optional — same host, model, options as generateImage
+  host: 'http://localhost:11434',
+  model: 'x/flux2-klein:4b',
+  options: {
+    width: 512,
+    height: 512,
+    steps: 20,
+    negative_prompt: 'blurry, low quality',
+  },
+});
+
+for (const { prompt, results } of batch) {
+  results.forEach((result, i) => {
+    fs.writeFileSync(`output-${i}.png`, Buffer.from(result.imageBase64, 'base64'));
+  });
+}
+```
+
+### Batch config
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `prompts` | `string[]` | — | List of image prompts (required) |
+| `countPerPrompt` | `number` | `1` | Number of images to generate per prompt |
+| `onProgress` | `(completed: number, total: number) => void` | — | Called after each image finishes |
+| `host` | `string` | `http://localhost:11434` | Ollama host URL |
+| `model` | `string` | `x/flux2-klein:4b` | Model to use |
+| `options` | `GenerateImageOptions` | — | Same options as `generateImage` |
 
 ## License
 

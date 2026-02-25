@@ -14,6 +14,22 @@ export interface GenerateImageConfig {
   options?: GenerateImageOptions;
 }
 
+export type BatchGenerateProgressCallback = (completed: number, total: number) => void;
+
+export interface BatchGenerateImageConfig {
+  host?: string;
+  model?: string;
+  prompts: string[];
+  countPerPrompt?: number;
+  options?: GenerateImageOptions;
+  onProgress?: BatchGenerateProgressCallback;
+}
+
+export interface BatchGenerateImageResult {
+  prompt: string;
+  results: GenerateImageResult[];
+}
+
 export interface GenerateImageResult {
   imageBase64: string;
   model: string;
@@ -51,4 +67,29 @@ export async function generateImage(config: GenerateImageConfig): Promise<Genera
     model: data.model,
     createdAt: data.created_at,
   };
+}
+
+export async function batchGenerateImages(
+  config: BatchGenerateImageConfig,
+): Promise<BatchGenerateImageResult[]> {
+  const { prompts, countPerPrompt = 1, host, model, options, onProgress } = config;
+  const total = prompts.length * countPerPrompt;
+  let completed = 0;
+
+  const batchResults: BatchGenerateImageResult[] = [];
+
+  for (const prompt of prompts) {
+    const results: GenerateImageResult[] = [];
+
+    for (let i = 0; i < countPerPrompt; i++) {
+      const result = await generateImage({ host, model, prompt, options });
+      results.push(result);
+      completed++;
+      onProgress?.(completed, total);
+    }
+
+    batchResults.push({ prompt, results });
+  }
+
+  return batchResults;
 }

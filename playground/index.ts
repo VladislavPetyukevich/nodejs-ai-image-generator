@@ -1,17 +1,23 @@
 import fs from 'fs';
 import path from 'path';
-import { generateImage, GenerateImageConfig } from '../src/index';
+import { batchGenerateImages, BatchGenerateImageConfig } from '../src/index';
 
-// --- Edit config here to test different scenarios ---
-const config: GenerateImageConfig = {
+const batchConfig: BatchGenerateImageConfig = {
+  prompts: [
+    'a futuristic city at sunset, highly detailed, cinematic lighting',
+    'a serene mountain landscape with snow peaks and a calm lake',
+  ],
+  countPerPrompt: 2,
   host: 'http://localhost:11434',
   model: 'x/flux2-klein:4b',
-  prompt: 'a futuristic city at sunset, highly detailed, cinematic lighting',
   options: {
-    seed: 42,
     width: 512,
     height: 512,
     steps: 20,
+    negative_prompt: 'blurry, low quality',
+  },
+  onProgress: (completed, total) => {
+    console.log(`Progress: ${completed}/${total} images generated`);
   },
 };
 // ----------------------------------------------------
@@ -29,29 +35,34 @@ function saveImage(base64: string): string {
   return filepath;
 }
 
-async function main() {
-  console.log('Generating image...');
-  console.log('Config:', JSON.stringify(config, null, 2));
+async function mainBatch() {
+  console.log('Batch generating images...');
+  console.log('Config:', JSON.stringify(batchConfig, null, 2));
   console.log('');
 
   const start = Date.now();
 
-  const result = await generateImage(config);
+  console.log('Generating images...');
+
+  const batch = await batchGenerateImages(batchConfig);
 
   const elapsed = ((Date.now() - start) / 1000).toFixed(2);
   console.log(`Done in ${elapsed}s`);
-  console.log(`Model: ${result.model}`);
-  console.log(`Created at: ${result.createdAt}`);
 
-  if (result.imageBase64) {
-    const saved = saveImage(result.imageBase64);
-    console.log('\nSaved to:', saved);
-  } else {
-    console.log('\nNo image returned.');
+  for (const { prompt, results } of batch) {
+    console.log(`\nPrompt: "${prompt}"`);
+    results.forEach((result, i) => {
+      if (result.imageBase64) {
+        const saved = saveImage(result.imageBase64);
+        console.log(`  [${i + 1}] Saved to: ${saved}`);
+      } else {
+        console.log(`  [${i + 1}] No image returned.`);
+      }
+    });
   }
 }
 
-main().catch(err => {
-  console.error('Error:', err.message);
+mainBatch().catch(err => {
+  console.error('Batch error:', err.message);
   process.exit(1);
 });
