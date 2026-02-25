@@ -24,7 +24,7 @@ const result = await generateImage({
   host: 'http://localhost:11434',
   model: 'x/flux2-klein:4b',
   options: {
-    seed: 42,
+    seed: 42, // Don't pass if you want to generate different images every time
     width: 512,
     height: 512,
     steps: 20,
